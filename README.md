@@ -28,23 +28,30 @@ Based on the `product_id`, images should be download and compressed and stored i
 
 #### Users
 
-1. id - int, primary key
-2. name - name of the users
-3. phone - contact number of the user
-6. created_at
-7. updated_at 
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | INT | PRIMARY KEY |
+| name | VARCHAR(255) | |
+| email | VARCHAR(255) | |
+| created_at | BIGINT | |
+| updated_at | BIGINT | |
+
 
 #### Products
 (data should be added from API only)
 
-1. id - int, primary key
-2. name - string, name of the product
-3. description - text, about the product
-4. images - array
-5. price - number
-6. compressed_images - array
-7. created_at
-8. updated_at
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | INT | PRIMARY KEY |
+| user_id | INT | FOREIGN KEY |
+| name | VARCHAR(255) | |
+| description | TEXT | |
+| images | TEXT[] | |
+| compressed_images | TEXT[] | |
+| price | NUMERIC(10,2) | |
+| created_at | BIGINT | |
+| updated_at | BIGINT | |
+
 
 ## Testing
 Include unit tests, integration and benchmark tests.

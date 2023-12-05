@@ -33,6 +33,18 @@ func (this *ApiServiceImpl) GetUser(id int) api.ApiHandlerResponse {
 	return api.ApiHandlerResponse{Code: http.StatusOK, Body: api.ResponseBody{Data: user}}
 }
 
+func (this *ApiServiceImpl) DeleteUser(id int) api.ApiHandlerResponse {
+	res, err := this.UserAccessor.Delete(id)
+	if err != nil {
+		return api.ApiHandlerResponse{Code: http.StatusInternalServerError, Error: err}
+	}
+	if !res {
+		return api.ApiHandlerResponse{Code: http.StatusNotFound, Error: errors.New("data not found")}
+	}
+
+	return api.ApiHandlerResponse{Code: http.StatusOK, Body: api.ResponseBody{Message: "data deleted"}}
+}
+
 func (this *ApiServiceImpl) AddUser(dto api.AddUserDTO) api.ApiHandlerResponse {
 	user, err := this.UserAccessor.Insert(
 		dto.Name,
@@ -57,16 +69,21 @@ func (this *ApiServiceImpl) GetProduct(id int) api.ApiHandlerResponse {
 	return api.ApiHandlerResponse{Code: http.StatusOK, Body: api.ResponseBody{Data: product}}
 }
 
-func (this *ApiServiceImpl) AddProduct(dto api.AddProductDTO) api.ApiHandlerResponse {
-	user, err := this.UserAccessor.Get(dto.UserID)
+func (this *ApiServiceImpl) DeleteProduct(id int) api.ApiHandlerResponse {
+	res, err := this.ProductAccessor.Delete(id)
 	if err != nil {
 		return api.ApiHandlerResponse{Code: http.StatusInternalServerError, Error: err}
 	}
-	if user == nil {
-		return api.ApiHandlerResponse{Code: http.StatusBadRequest, Error: errors.New("user not found")}
+	if !res {
+		return api.ApiHandlerResponse{Code: http.StatusNotFound, Error: errors.New("data not found")}
 	}
 
+	return api.ApiHandlerResponse{Code: http.StatusOK, Body: api.ResponseBody{Message: "data deleted"}}
+}
+
+func (this *ApiServiceImpl) AddProduct(dto api.AddProductDTO) api.ApiHandlerResponse {
 	product, err := this.ProductAccessor.Insert(
+		dto.UserID,
 		dto.ProductName,
 		dto.ProductDescription,
 		dto.ProductPrice,
@@ -76,10 +93,13 @@ func (this *ApiServiceImpl) AddProduct(dto api.AddProductDTO) api.ApiHandlerResp
 		return api.ApiHandlerResponse{Code: http.StatusInternalServerError, Error: err}
 	}
 
-	this.MQService.Publish(api.MQPublish{
+	err = this.MQService.Publish(api.MQPublish{
 		Queue:   "AddProduct",
 		Message: strconv.Itoa(product.Id),
 	})
+	if err != nil {
+		return api.ApiHandlerResponse{Code: http.StatusInternalServerError, Error: err}
+	}
 
 	return api.ApiHandlerResponse{Code: http.StatusCreated, Body: api.ResponseBody{Data: product}}
 }

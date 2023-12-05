@@ -39,6 +39,7 @@ type User struct {
 
 type Product struct {
 	Id               int
+	UserId           int
 	Name             string
 	Description      string
 	Images           []string

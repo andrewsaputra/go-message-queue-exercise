@@ -38,6 +38,20 @@ func (this *ApiHandler) GetUser(c *gin.Context) {
 	this.writeResponse(c, response)
 }
 
+func (this *ApiHandler) DeleteUser(c *gin.Context) {
+	userId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		this.writeResponse(
+			c,
+			api.ApiHandlerResponse{Code: http.StatusBadRequest, Error: errors.New("invalid id provided")},
+		)
+		return
+	}
+
+	response := this.Service.DeleteUser(userId)
+	this.writeResponse(c, response)
+}
+
 func (this *ApiHandler) AddUser(c *gin.Context) {
 	var dto api.AddUserDTO
 	if err := c.BindJSON(&dto); err != nil {
@@ -71,6 +85,20 @@ func (this *ApiHandler) GetProduct(c *gin.Context) {
 	}
 
 	response := this.Service.GetProduct(productId)
+	this.writeResponse(c, response)
+}
+
+func (this *ApiHandler) DeleteProduct(c *gin.Context) {
+	userId, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		this.writeResponse(
+			c,
+			api.ApiHandlerResponse{Code: http.StatusBadRequest, Error: errors.New("invalid id provided")},
+		)
+		return
+	}
+
+	response := this.Service.DeleteProduct(userId)
 	this.writeResponse(c, response)
 }
 
