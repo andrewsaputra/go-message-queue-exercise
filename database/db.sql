@@ -39,9 +39,3 @@ CREATE TABLE products (
 
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
-
-/*
-INSERT INTO products (user_id, name, description, images, compressed_images, price, created_at)
-VALUES
-    (2, 'Product 1', 'This is product 1', '{"image1.jpg", "image2.jpg"}', '{}', 9.99, EXTRACT(EPOCH FROM NOW())*1000);
-*/

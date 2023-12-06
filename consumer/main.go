@@ -33,5 +33,3 @@ func main() {
 	var forever chan int
 	<-forever
 }
-
-//curl -w "\n" -X POST localhost:3000/products -d '{"user_id":2, "product_name":"product 1", "product_description":"desc 1", "product_price" : 9.99, "product_images":[]}'
